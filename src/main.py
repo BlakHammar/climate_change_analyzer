@@ -1,5 +1,4 @@
-from algorithms import linear_regression, kmeans_clustering, isolation_forest_anomaly_detection, zscore_anomaly_detection
-from visualizer import plot_histogram, plot_interactive_scatter, combine_visualizations
+from visualizer import plot_interactive_scatter, linear_regression, kmeans_clustering
 import pandas
 from sklearn.ensemble import IsolationForest
 from sklearn.cluster import KMeans
@@ -27,22 +26,13 @@ def main():
     # Apply Linear Regression for trend analysis
     df, lr_model, y_pred, future_years, future_anomalies = linear_regression(df)
 
-    # Apply Isolation Forest for anomaly detection
-    df, isolation_forest_model = isolation_forest_anomaly_detection(df)
     
     # Apply K-means clustering
     df, kmeans_model = kmeans_clustering(df, n_clusters=4)
     
-    # Apply Z-score anomaly detection
-    df = zscore_anomaly_detection(df, threshold=2)
-    
-    
-    # Step 5: Visualize the Results
-    plot_histogram(df)  # Histogram of anomalies distribution
+    # Interactive Scatter Plot
     plot_interactive_scatter(df)  # Interactive scatter plot with Plotly
-    
-    # Combined Visualizations
-    combine_visualizations(df, kmeans_model)  # Combined visualizations (Line plot, Box plot, Clustering)
+
 
 if __name__ == "__main__":
     main()

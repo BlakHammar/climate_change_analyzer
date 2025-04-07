@@ -2,6 +2,8 @@ import matplotlib.pyplot as plt
 import seaborn as sb
 import plotly.express as px
 from sklearn.cluster import KMeans
+from sklearn.linear_model import LinearRegression
+import pandas
 
 
 # Histogram of Ocean Anomalies
@@ -18,45 +20,82 @@ def plot_histogram(df):
 
 # Interactive Scatter Plot using Plotly
 def plot_interactive_scatter(df):
-    fig = px.scatter(df, x='Year', y='Anomaly', color='Cluster', 
+    plt = px.scatter(df, x='Year', y='Anomaly', color='Cluster', 
                      title='Interactive Ocean Anomalies with Clustering',
                      labels={'Year': 'Year', 'Anomaly': 'Anomaly'})
-    fig.show()
-
-
-# Combine Multiple Visualizations (Line Plot, Box Plot, and Clusters)
-def combine_visualizations(df, kmeans):
-    fig, axes = plt.subplots(1, 3, figsize=(18, 6))
-
-    # Line plot
-    axes[0].plot(df['Year'], df['Anomaly'], color='blue')
-    axes[0].set_title('Ocean Anomalies Over Time')
-    axes[0].set_xlabel('Year')
-    axes[0].set_ylabel('Anomaly')
-
-    # Box plot
-    axes[1].boxplot(df['Anomaly'], vert=False, patch_artist=True)
-    axes[1].set_title('Box Plot of Anomalies')
-
-    # Clustering with centroids (1D centroids)
-    axes[2].scatter(df['Year'], df['Anomaly'], c=df['Cluster'], cmap='viridis')
-    
-    # Plot centroids (1D)
-    centroids = kmeans.cluster_centers_
-
-    # Plot each centroid on the plot at the first Year of each cluster's Anomaly
-    for i, centroid in enumerate(centroids):
-        # Find the Year closest to the centroid's value
-        closest_year_idx = (df['Anomaly'] - centroid).abs().argmin()
-        closest_year = df['Year'].iloc[closest_year_idx]
-        
-        # Plot the centroid at the closest Year and its Anomaly value
-        axes[2].scatter(closest_year, centroid, c='red', s=100, marker='X', label=f'Centroid {i+1}' if i == 0 else "")
-
-    axes[2].set_title('Clustering with Centroids')
-    axes[2].legend()
-
-    plt.tight_layout()
     plt.show()
+
+
+def kmeans_clustering(df, n_clusters=4):
+    X = df[['Anomaly']]  # Use anomaly data for clustering
+    
+    # Create and fit the K-means model
+    kmeans = KMeans(n_clusters=n_clusters, random_state=42)
+    df['Cluster'] = kmeans.fit_predict(X)
+
+    # Manually adjust the color assignments to match the plot
+    # Here we swap clusters manually: swap cluster 1 and cluster 2
+    df['Cluster'] = df['Cluster'].map({0: 0, 1: 2, 2: 1, 3: 3}) 
+    
+    # Plot clustered data
+    plt.figure(figsize=(10, 6))
+    plt.scatter(df['Year'], df['Anomaly'], c=df['Cluster'], cmap='viridis_r')
+    plt.title('Ocean Anomalies with K-means Clustering')
+    plt.xlabel('Year')
+    plt.ylabel('Anomaly')
+    plt.colorbar(label='Cluster')
+    plt.grid(True)
+    plt.show()
+    
+    return df, kmeans
+
+def linear_regression(df):
+    #plot the data
+
+    X = df[['Year']]
+    y = df['Anomaly']
+
+    #Create a linear regression model
+    model = LinearRegression()
+    model.fit(X, y)
+
+    #make predictions
+    y_pred = model.predict(X)
+
+    # Generate future years (let's forecast for the next 10 years)
+    future_years = pandas.DataFrame({'Year': range(df['Year'].max() + 1, df['Year'].max() + 101)})
+
+    # Predict future anomalies
+    future_anomalies = model.predict(future_years)
+
+
+
+    # Plot the actual data vs the predicted trend line
+    plt.figure(figsize=(10, 6))
+    plt.scatter(df['Year'], df['Anomaly'], color='blue', label='Actual Data')
+    plt.plot(df['Year'], y_pred, color='red', label='Trend Line')
+
+
+    # Plot the forecasted data
+    plt.plot(future_years['Year'], future_anomalies, color='green', label='Forecasted Data')
+
+    plt.title('Ocean Anomalies Over Time with Trend Line and Forecast')
+    plt.xlabel('Year')
+    plt.ylabel('Anomaly')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
+    #print the slope
+    slope = model.coef_[0]
+    print(f"The slope of the trend line is: {slope}")
+
+    # Print the forecasted anomalies for the next 100 years
+    for year, anomaly in zip(future_years['Year'], future_anomalies):
+        print(f"Forecasted anomaly for year {year}: {anomaly.round(4)}")
+
+
+    return df, model, y_pred, future_years, future_anomalies
+
 
 
