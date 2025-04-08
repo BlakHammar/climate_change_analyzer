@@ -1,29 +1,7 @@
 import matplotlib.pyplot as plt
-import seaborn as sb
-import plotly.express as px
 from sklearn.cluster import KMeans
 from sklearn.linear_model import LinearRegression
 import pandas
-
-
-# Histogram of Ocean Anomalies
-def plot_histogram(df):
-    plt.figure(figsize=(10, 6))
-    plt.hist(df['Anomaly'], bins=30, color='skyblue', edgecolor='black')
-    plt.title('Distribution of Ocean Anomalies')
-    plt.xlabel('Anomaly')
-    plt.ylabel('Frequency')
-    plt.grid(True)
-    plt.show()
-
-
-
-# Interactive Scatter Plot using Plotly
-def plot_interactive_scatter(df):
-    plt = px.scatter(df, x='Year', y='Anomaly', color='Cluster', 
-                     title='Interactive Ocean Anomalies with Clustering',
-                     labels={'Year': 'Year', 'Anomaly': 'Anomaly'})
-    plt.show()
 
 
 def kmeans_clustering(df, n_clusters=4):
@@ -47,7 +25,7 @@ def kmeans_clustering(df, n_clusters=4):
     plt.grid(True)
     plt.show()
     
-    return df, kmeans
+    return df
 
 def linear_regression(df):
     #plot the data
