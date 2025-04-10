@@ -93,6 +93,12 @@ def kmeans_clustering(df, n_clusters=4):
     plt.ylabel('Anomaly')
     plt.colorbar(label='Cluster')
     plt.grid(True)
+    all_years = df['Year'].unique()
+    all_years.sort()
+    step = max(len(all_years) // 10, 1) 
+    tick_years = all_years[::step]
+    plt.xticks(tick_years, rotation=45) 
+    plt.tight_layout()
     plt.show()
     
     return df
