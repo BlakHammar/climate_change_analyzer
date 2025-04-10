@@ -31,4 +31,5 @@ def load_data():
     except requests.exceptions.RequestException as e:
         # Handle any exception that occurs during the request
         print(f"Failed to retrieve data: {e}")
+        return None
 
