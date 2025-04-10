@@ -1,5 +1,5 @@
-from algorithms import load_data, kmeans_clustering
-from visualizer import scatter_plot, line_graph, bar_graph, linear_regression
+from algorithms import load_data, kmeans_clustering, linear_regression
+from visualizer import scatter_plot, line_graph, bar_graph
 
 def display_line():
     df = load_data()
@@ -17,7 +17,7 @@ def display_linear_regression():
     df = load_data()
     linear_regression(df)
 
-def clustering_callback():
+def display_kmeans():
     df = load_data()
     kmeans_clustering(df)
 
@@ -63,7 +63,7 @@ def Interface():
                 if choice == '1':
                     display_linear_regression()
                 elif choice == '2':
-                    clustering_callback()
+                    display_kmeans()
                 elif choice == '3':
                     break
                 else:

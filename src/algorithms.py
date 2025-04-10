@@ -1,8 +1,9 @@
 import pandas
-import os
 import requests
 import matplotlib.pyplot as plt
 import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.cluster import KMeans
 
 def load_data():
 
@@ -24,53 +25,54 @@ def load_data():
     return df
 
 
-# def linear_regression(df):
-#     #plot the data
+def linear_regression(df):
+    #plot the data
 
-#     X = df[['Year']]
-#     y = df['Anomaly']
+    X = df[['Year']]
+    y = df['Anomaly']
 
-#     #Create a linear regression model
-#     model = LinearRegression()
-#     model.fit(X, y)
+    #Create a linear regression model
+    model = LinearRegression()
+    model.fit(X, y)
 
-#     #make predictions
-#     y_pred = model.predict(X)
+    #make predictions
+    y_pred = model.predict(X)
 
-#     # Generate future years (let's forecast for the next 10 years)
-#     future_years = pandas.DataFrame({'Year': range(df['Year'].max() + 1, df['Year'].max() + 101)})
+    # Generate future years (let's forecast for the next 100 years)
+    df['Year'] = pandas.to_numeric(df['Year'], errors='coerce')  # Convert to numeric, replacing invalid values with NaN
+    future_years = pandas.DataFrame({'Year': range(df['Year'].max() + 1, df['Year'].max() + 101)})
 
-#     # Predict future anomalies
-#     future_anomalies = model.predict(future_years)
-
-
-
-#     # Plot the actual data vs the predicted trend line
-#     plt.figure(figsize=(10, 6))
-#     plt.scatter(df['Year'], df['Anomaly'], color='blue', label='Actual Data')
-#     plt.plot(df['Year'], y_pred, color='red', label='Trend Line')
+    # Predict future anomalies
+    future_anomalies = model.predict(future_years)
 
 
-#     # Plot the forecasted data
-#     plt.plot(future_years['Year'], future_anomalies, color='green', label='Forecasted Data')
 
-#     plt.title('Ocean Anomalies Over Time with Trend Line and Forecast')
-#     plt.xlabel('Year')
-#     plt.ylabel('Anomaly')
-#     plt.legend()
-#     plt.grid(True)
-#     plt.show()
-
-#     #print the slope
-#     slope = model.coef_[0]
-#     print(f"The slope of the trend line is: {slope}")
-
-#     # Print the forecasted anomalies for the next 100 years
-#     for year, anomaly in zip(future_years['Year'], future_anomalies):
-#         print(f"Forecasted anomaly for year {year}: {anomaly.round(4)}")
+    # Plot the actual data vs the predicted trend line
+    plt.figure(figsize=(10, 6))
+    plt.scatter(df['Year'], df['Anomaly'], color='blue', label='Actual Data')
+    plt.plot(df['Year'], y_pred, color='red', label='Trend Line')
 
 
-#     return df, model, y_pred, future_years, future_anomalies
+    # Plot the forecasted data
+    plt.plot(future_years['Year'], future_anomalies, color='green', label='Forecasted Data')
+
+    plt.title('Ocean Anomalies Over Time with Trend Line and Forecast')
+    plt.xlabel('Year')
+    plt.ylabel('Anomaly')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
+    #print the slope
+    slope = model.coef_[0]
+    print(f"The slope of the trend line is: {slope}")
+
+    # Print the forecasted anomalies for the next 100 years
+    for year, anomaly in zip(future_years['Year'], future_anomalies):
+        print(f"Forecasted anomaly for year {year}: {anomaly.round(4)}")
+
+
+    return df
 
 def kmeans_clustering(df, n_clusters=4):
     X = df[['Anomaly']]  # Use anomaly data for clustering
@@ -94,57 +96,3 @@ def kmeans_clustering(df, n_clusters=4):
     plt.show()
     
     return df
-
-
-def gradient_descent(m_now, b_now, points, L):
-
-    m_gradient = 0
-    b_gradient = 0
-
-    n = len(points)
-
-    points['Year'] = pandas.to_numeric(points['Year'], errors='coerce')
-    points['Anomaly'] = pandas.to_numeric(points['Anomaly'], errors='coerce')
-
-    for i in range(n):
-        x = points['Year'].iloc[i]  
-        y = points['Anomaly'].iloc[i] 
-
-        m_gradient += -(2 / n) * x * (y - (m_now * x + b_now))
-        b_gradient += -(2 / n) * (y - (m_now * x + b_now))
-
-    m = m_now - L * m_gradient
-    b = b_now - L * b_gradient
-
-
-    return m, b
-
-class Linear_Regression:
-    def __init__(self, lr = 0.01, iterations = 1000):
-        self.lr = lr
-        self.iterations = iterations
-        self.weights = None
-        self.bias = None
-
-    def fit(self, X, y):
-        n_samples= X.shape
-        self.weights = np.zeros(n_samples)
-        self.bias = 0
-
-        print(X)
-
-        print(self.weights)
-
-        for _ in range(self.iterations):
-            y_pred = float(np.dot(X, self.weights)) + self.bias # predicted values
-
-            dw = (1 / n_samples) * np.dot(X.T, (y_pred - y)) # gradient of weights
-            db= (1 / n_samples) * np.sum(y_pred - y) # gradient of bias
-
-            self.weights = self.weights - self.lr * dw
-            self.bias = self.bias - self.lr * db
-
-
-    def predict(self, X):
-        y_pred = float(np.dot(X, self.weights)) + self.bias
-        return y_pred

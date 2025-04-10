@@ -1,9 +1,4 @@
-import matplotlib.pyplot as plt
 import plotly.express as px
-import numpy as np
-
-from algorithms import Linear_Regression
-from sklearn.model_selection import train_test_split
 
 
 def scatter_plot(df):
@@ -79,35 +74,7 @@ def bar_graph(df):
     # Show the plot
     fig.show()
     
-def linear_regression(df):
 
-    X = df['Year']
-    y = df['Anomaly']
-
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
-    fig = plt.figure(figsize=(10, 6))
-    plt.scatter(X, y, color='b', marker='o', s=30)
-    plt.show()
-
-
-    lr = Linear_Regression()
-    lr.fit(X, y)
-
-
-    y_pred = lr.predict(X)
-    cmap = plt.get_cmap('viridis')
-    fig = plt.figure(figsize=(10, 6))
-    m1 =plt.scatter(X_train, y_train, color=cmap(0.9), s=10)
-    m2 = plt.scatter(X_test, y_test, color=cmap(0.5), s=10)
-
-    plt.xlabel('Year')
-    plt.ylabel('Anomaly')
-    plt.title('Ocean Anomalies with Linear Regression')
-
-    plt.plot(X, y_pred, color='black', linewidth=2, label='Predictions')
-
-    plt.show()
 
 
 
