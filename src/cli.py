@@ -1,4 +1,5 @@
-from algorithms import load_data, kmeans_clustering, linear_regression
+from data_processor import load_data
+from algorithms import kmeans_clustering, linear_regression
 from visualizer import scatter_plot, line_graph, bar_graph
 
 def display_line():

@@ -5,26 +5,6 @@ import numpy as np
 from sklearn.linear_model import LinearRegression
 from sklearn.cluster import KMeans
 
-def load_data():
-
-    # Fetch the data
-    response = requests.get("https://global-warming.org/api/ocean-warming-api")
-    ocean_data = response.json()
-
-    # Extract the data from the 'result' key
-    ocean_data = ocean_data.get('result', {})
-
-    # Process the data
-    data_list = []
-    for Year, data in ocean_data.items():
-        data_list.append({'Year': Year, 'Anomaly': data['anomaly']})
-
-    # Create a DataFrame
-    df = pandas.DataFrame(data_list)
-
-    return df
-
-
 def linear_regression(df):
     #plot the data
 
