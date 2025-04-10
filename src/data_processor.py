@@ -26,7 +26,7 @@ def load_data():
 
     # Create a DataFrame
         df = pandas.DataFrame(data_list) 
-        dfCache = df #Cache dataframe so the request only happens once
+        df_cache = df #Cache dataframe so the request only happens once
         return df
     except requests.exceptions.RequestException as e:
         # Handle any exception that occurs during the request
