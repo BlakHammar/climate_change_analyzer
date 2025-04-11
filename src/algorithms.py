@@ -4,8 +4,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.linear_model import LinearRegression
 from sklearn.cluster import KMeans
+from data_processor import load_data
 
-def linear_regression(df):
+def linear_regression():
+    df = load_data()
     #plot the data
 
     X = df[['Year']]
@@ -54,7 +56,8 @@ def linear_regression(df):
 
     return df
 
-def kmeans_clustering(df, n_clusters=4):
+def kmeans_clustering(n_clusters=4):
+    df = load_data()
     X = df[['Anomaly']]  # Use anomaly data for clustering
     
     # Create and fit the K-means model
@@ -82,3 +85,37 @@ def kmeans_clustering(df, n_clusters=4):
     plt.show()
     
     return df
+
+def detect_anomalies(windowSize=15, threshold=1.5):
+    df = load_data()
+    anomalies = []
+    rolling_mean = df['Anomaly'].rolling(window=windowSize, center=True).mean()
+    rolling_std = df['Anomaly'].rolling(window=windowSize, center=True).std()
+
+    for i in range(len(df)): #load anomalies list
+        if abs(df['Anomaly'].iloc[i] - rolling_mean.iloc[i]) > threshold * rolling_std.iloc[i]:
+            anomalies.append((df['Year'].iloc[i], df['Anomaly'].iloc[i]))
+
+    anomaly_years, anomaly_values = zip(*anomalies)
+
+    plt.figure(figsize=(14, 7))
+    plt.plot(df['Year'], df['Anomaly'], label='Annual Anomaly', color='steelblue')
+    plt.scatter(anomaly_years, anomaly_values, color='red', label='Detected Outliers')
+
+    for x, y in zip(anomaly_years, anomaly_values): #annotate each anomaly 
+        plt.annotate(f"{x}", (x, y), textcoords="offset points", xytext=(0, 8), ha='center', fontsize=8, color='darkred')
+
+    plt.title('Detected Anomalies in Ocean Data')
+    plt.xlabel('Year')
+    plt.ylabel('Temperature Anomaly')
+    plt.legend()
+    plt.grid(True)
+    all_years = df['Year'].unique()
+    all_years.sort()
+    step = max(len(all_years) // 10, 1) 
+    tick_years = all_years[::step]
+    plt.xticks(tick_years, rotation=45) 
+    plt.tight_layout()
+    plt.show()
+
+    return anomalies

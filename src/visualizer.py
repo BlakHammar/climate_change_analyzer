@@ -1,7 +1,8 @@
 import plotly.express as px
+from data_processor import load_data
 
-
-def scatter_plot(df):
+def scatter_plot():
+    df = load_data()
     fig = px.scatter(df, x='Year', y='Anomaly', title='Ocean Anomalies Scatter Plot')
 
     fig.update_traces(marker=dict(size=16,
@@ -19,7 +20,8 @@ def scatter_plot(df):
     fig.show()
 
 
-def line_graph(df):
+def line_graph():
+    df = load_data()
     fig = px.line(df, x='Year', y='Anomaly', title='Ocean Anomalies')
 
     # Customize the layout
@@ -42,8 +44,8 @@ def line_graph(df):
 
     fig.show()
 
-def bar_graph(df):
-    
+def bar_graph():
+    df = load_data()
 
     fig = px.bar(df, x='Year', y='Anomaly', title='Ocean Anomalies')
 

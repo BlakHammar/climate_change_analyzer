@@ -1,77 +1,64 @@
 from data_processor import load_data
-from algorithms import kmeans_clustering, linear_regression
+from algorithms import kmeans_clustering, linear_regression, detect_anomalies
 from visualizer import scatter_plot, line_graph, bar_graph
 
-def display_line():
-    df = load_data()
-    line_graph(df)
-
-def display_bar():
-    df = load_data()
-    bar_graph(df)
-
-def display_scatter():
-    df = load_data()
-    scatter_plot(df)
-
-def display_linear_regression():
-    df = load_data()
-    linear_regression(df)
-
-def display_kmeans():
-    df = load_data()
-    kmeans_clustering(df)
-
-def display():
+def main_display(): #main options display
     print("Ocean Anomalies Analysis")
     print("1. Data Visualization")
     print("2. Algorithms")
     print("3. Exit")
 
-def display_Visualizer():
+def vis_display():  #visual options display
     print("1. Line Graph")
     print("2. Bar Graph")
     print("3. Scatter Plot")
     print("4. Back")
 
-def display_Algorithms():
+def algo_display(): #algorithm options display
     print("1. Linear Regression")
     print("2. K-means Clustering")
-    print("3. Back")
+    print("3. Time Series Anomaly Detection")
+    print("4. Back")
 
-def Interface():
+vis_choices = { #visual choices
+    1: line_graph,
+    2: bar_graph,
+    3: scatter_plot, 
+    4: "Exit"
+}
+
+algo_choices = { #algorithm choices
+    1: linear_regression,
+    2: kmeans_clustering,
+    3: detect_anomalies,
+    4: "Exit"
+}
+
+main_choices = { #main choice menu
+    1: [vis_display, vis_choices], #holds display function and choice list
+    2: [algo_display, algo_choices],
+    3: "Exit"
+}
+
+def choice_loop(display_type, choice_list):
     while True:
-        display()
-        choice = input("Enter your choice: ")
-        if choice == '1':
-            while True:
-                display_Visualizer()
-                choice = input("Enter your choice: ")
-                if choice == '1':
-                    display_line()
-                elif choice == '2':
-                    display_bar()
-                elif choice == '3':
-                    display_scatter()
-                elif choice == '4':
-                    break
-                else:
-                    print("Invalid choice. Please try again.")
-        elif choice == '2':
-            while True:
-                display_Algorithms()
-                choice = input("Enter your choice: ")
-                if choice == '1':
-                    display_linear_regression()
-                elif choice == '2':
-                    display_kmeans()
-                elif choice == '3':
-                    break
-                else:
-                    print("Invalid choice. Please try again.")
-        elif choice == '3':
-            print("Goodbye!")
-            break
-        else:
-            print("Invalid choice. Please try again.")
+        print("\n") #create line space before displaying options
+        display_type() #Display options based on type (main, visual, algorithm)
+        choice = int(input("\nEnter your choice: "))
+        result = choice_list.get(choice) #Find result from choice list based on type
+        if result:
+            if result == "Exit":
+                if choice_list == main_choices: #print goodbye if exiting the entire program
+                    print("\nGoodbye!")
 
+                break #break if exiting option or program
+            else:
+                if isinstance(result, list): #main choices are returned as a list to hold the display function and choice list
+                    choice_loop(result[0], result[1]) #restart the loop using new display and choice list
+                else:
+                    result() #sub choices are returned as a single function
+        else:
+            print("\nInvalid choice, please try again.")
+                
+def Interface(): 
+    choice_loop(main_display, main_choices) #Begin loop sending display type and choice list
