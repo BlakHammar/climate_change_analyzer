@@ -6,7 +6,7 @@ import requests
 from src.data_processor import load_data
 #from src.data_processor import load_data
 
-class testDataProcess(unittest.TestCase):
+class test_data_process(unittest.TestCase):
     def test_data_load(self): #Test data loading ensuring its a panda data frame and has rows
        with patch("requests.get") as mocked_get:
            mocked_get.return_value.status_code = 200
