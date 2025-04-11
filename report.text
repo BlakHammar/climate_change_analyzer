@@ -1,0 +1,53 @@
+Write-Up: Climate Change Analyzer Algorithm and Findings
+1. Introduction
+The Climate Change Analyzer project focuses on analyzing and predicting climate trends using climate data. The primary goal is to process datasets, apply machine learning algorithms, and to visualize the data. The project uses Linear Regression for trend analysis, K-means clustering for data grouping, and anomaly detection to identify irregularities in the climate patterns. This report outlines the algorithms used, the processes followed, the reasoning behind the selection of these algorithms, and the key findings derived from the analysis.
+2. Algorithm Selection and Justification
+2.1 Overview of the Chosen Algorithms
+Linear Regression: This algorithm models the relationship between climate parameters: temperature, CO2 levels and time; providing insights into long-term trends and helping predict future climate behavior.
+K-means Clustering: This algorithm is used to group climate data into distinct clusters based on similarity. K-means helps identify regions with similar climate characteristics.
+Anomaly Detection: This algorithm identifies data points that deviate from the norm. These outliers could represent unusual climate events or potential data issues.
+
+
+2.2 Justification for Algorithm Selection
+Linear Regression: Linear regression is an excellent choice for capturing linear trends in climate data, especially for temperature and CO2 levels. This tends to follow predictable, linear growth patterns over time.
+K-means Clustering: K-means clustering allows us to identify groups of data points that exhibit similar behaviors. This is useful in finding regions with similar climate patterns or periods of time with similar environmental conditions.
+Anomaly Detection: Anomaly detection was implemented to identify climate events or data points that significantly deviate from the expected patterns. This is especially important for detecting unusual climate phenomena.
+3.1 Data Collection and Cleaning
+The dataset used in this project was obtained from global-warming.org, specifically focusing on ocean temperature data. The dataset contains records of sea surface temperatures (SST) across various regions and over several decades.
+4. Model Implementation
+4.1 Linear Regression
+Splitting the Data: The dataset was divided into training (80%) and testing (20%) sets.
+
+
+Training the Model: The model was trained using the training set to find the coefficients (weights) that minimize the error between the predicted and actual values.
+
+
+Evaluating the Model: The model's accuracy was evaluated using R-squared and Mean Squared Error (MSE), which provided an understanding of the model's fit to the data.
+4.2 K-means Clustering
+Choosing the Number of Clusters (K): The number of clusters was determined using methods such as the Elbow Method, where we calculated the within-cluster sum of squares (WCSS) for different values of K and chose the point where the WCSS starts to level off.
+
+
+Fitting the Model: The K-means algorithm was applied to the data to group it into clusters based on features such as temperature and CO2 levels.
+
+
+Visualization: The clusters were visualized using scatter plots, which allowed us to see the relationship between the clusters and the selected climate features.
+4.3 Anomaly Detection
+The method works by comparing each data point with the mean and standard deviation of a surrounding window of data. If a data point deviates significantly from the rolling mean (based on a specified threshold), it is flagged as an anomaly.
+Rolling Mean and Standard Deviation: A rolling mean and rolling standard deviation were calculated over a window of data points. This helps smooth out short-term fluctuations and highlights long-term trends while capturing potential anomalies.
+
+
+Threshold for Anomaly Detection: The threshold is applied to the rolling standard deviation. If the absolute difference between the anomaly value and the rolling mean exceeds a set multiple of the rolling standard deviation, that data point is considered an anomaly.
+
+
+Visualization: Detected anomalies are plotted alongside the ocean temperature anomaly data. Anomalous points are highlighted in red for easy identification. The anomalies are also annotated with the corresponding year for reference.
+5. Results and Findings
+5.1 Accuracy of the Linear Regression Model
+The linear regression model demonstrated strong predictive power, with an R-squared value above 0.85 for global temperature trends. This indicates that the model accurately captured the linear relationship between temperature and time. However, for non-linear climate patterns, the model's predictions were less accurate.
+5.2 Insights from K-means Clustering
+Clusters of Stable Climate: Groups of years with relatively stable temperatures and CO2 levels were identified, representing periods of minimal climate variation. 
+5.3 Anomalies Detected
+Extreme Temperature Events: Anomalies were detected in years with exceptionally high global temperatures, and twice where the temperatures were lower than expectant. 
+5.4 Limitations and Future Work
+Non-linear Relationships: Linear regression had limitations when it came to capturing non-linear relationships in the data. Future work could involve testing more advanced models like decision trees or neural networks to account for these complexities.
+6. Conclusion
+The Climate Change Analyzer successfully implemented a combination of Linear Regression, K-means Clustering, and Anomaly Detection to analyze climate change data. The results confirmed rising global temperatures while also identifying some climate anomalies. While the model performed well for global trends, further refinement of the algorithms and the inclusion of more sophisticated techniques will allow for more accurate regional predictions and a deeper understanding of climate dynamics.
