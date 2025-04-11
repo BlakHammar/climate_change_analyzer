@@ -56,7 +56,8 @@ def choice_loop(display_type, choice_list):
                 if isinstance(result, list): #main choices are returned as a list to hold the display function and choice list
                     choice_loop(result[0], result[1]) #restart the loop using new display and choice list
                 else:
-                    result() #sub choices are returned as a single function
+                    df = load_data()
+                    result(df) #sub choices are returned as a single function
         else:
             print("\nInvalid choice, please try again.")
                 

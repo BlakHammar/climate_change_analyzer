@@ -4,10 +4,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.linear_model import LinearRegression
 from sklearn.cluster import KMeans
-from data_processor import load_data
 
-def linear_regression():
-    df = load_data()
+def linear_regression(df):
     #plot the data
 
     X = df[['Year']]
@@ -56,8 +54,7 @@ def linear_regression():
 
     return df
 
-def kmeans_clustering(n_clusters=4):
-    df = load_data()
+def kmeans_clustering(df, n_clusters=4):
     X = df[['Anomaly']]  # Use anomaly data for clustering
     
     # Create and fit the K-means model
@@ -86,8 +83,7 @@ def kmeans_clustering(n_clusters=4):
     
     return df
 
-def detect_anomalies(windowSize=15, threshold=1.5):
-    df = load_data()
+def detect_anomalies(df, windowSize=15, threshold=1.5):
     anomalies = []
     rolling_mean = df['Anomaly'].rolling(window=windowSize, center=True).mean()
     rolling_std = df['Anomaly'].rolling(window=windowSize, center=True).std()
